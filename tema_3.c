@@ -43,7 +43,7 @@ void alocare(int ***matrice, int linii, int coloane)
 {
 	(*matrice) = (int **)malloc(linii * sizeof(int *));
 	if ((*matrice) == NULL) {
-		printf("Nu s-a putut aloca matricea");
+		printf("Nu s-a putut aloca matricea\n");
 	}
 
 	for (int i = 0; i < linii; i++) {
