@@ -1,0 +1,73 @@
+# Copyright Dragan Dragos Ovidiu 313CAb 2022-2023
+
+La inceputul programului am construit cateva subprograme de care ma voi folosi
+de ele pe parcurs:
+
+1. minim;
+2. maxim;
+3. dealocare;
+4. dealocare_select;
+5. alocare;
+6. clamp;
+7. inmultire.
+
+Functia select_poza incarca in cadrul structurii select o matrice, dimensiunile
+acesteia, culoarea, precum si coordonatele.
+
+Functia selectare este apelata in urma inputului SELECT care verifica daca este 
+SELECT ALL sau SELECT x1 y1 x2 y2 care la randul ei apeleaza functia select_poza
+si afiseaza un mesaj.
+
+Functia load incarca in structura imagine o matrice alocata dinamic, campul
+destinat culorii, si al dimensiunilor. Citirea matricei se face in 2 moduri in
+functie de tipul pozei:binar sau ascii. In final este apelata si functia
+select_poza. Scopul este de a face o copie a imaginii si de a o folosi pentru
+a putea prelucra poza in functiile ce urmeaza.
+
+Functia histograma este apelata in urma inputului HISTOGRAM care creeaza o
+histograma cu x stelute si y bin-uri a pozei alb-negru incarcate.
+
+Functia egalizare este apelata in urma inputului EQUALIZE si executa
+egalizarea unei poze alb-negru. La finalul acesteia se copiaza in matricea
+auxiliara modificarea rezultata.
+
+Functia crop este apelata in urma inputului CROP si va retine in matricea din cadrul
+structurii imagine (poza finala), matricea din cadrul structurii select(cea
+auxiliara).
+
+Functia prelucrare este apelata pentru oricare dintre operatiile EDGE, BLUR,
+SHARPEN sau GAUSSIAN BLUR si care face inmultirea matricei de culori cu matricea
+kernel. Toate valorile rezultate sunt retinute in matricea auxiliara, iar la final
+sunt copiate toate in matricea "mama"(cea din cadrul structurii imagine).
+
+Functia apply este apelata in urma inputului APPLY si verifica ce comanda trebuie
+sa se efectueze. In functie de comanda, matricea kernel este modificata.
+
+Functiile rotire90_select si rotire90_selectcolor rotesc o selectie de poza
+alb-negru, respectiv color la 90 de grade spre dreapta.
+
+Functia rotire_select verifica cate grade trebuie sa fie rotita o portiune selectata
+dintr o poza si apeleaza functia corespunzatoare tipului de poza(alb-negru sau 
+color). 
+
+Functia rotire90_pozanoncolor roteste o poza intreaga alb-negru la 90 de grade spre
+dreapta si functia rotire90_pozacolor roteste o poza intreaga color la 90 de grade
+spre stanga. Pentru acest lucru se dealoca matricea initiala si se aloca alta cu
+dimensiunile corecte in care se copiaza elementele din matricea auxiliara.
+
+Functia rotire_poza verifica cate grade trebuie sa fie rotita o poza si apeleaza
+functia corespunzatoare tipului de poza(alb-negru sau color). 
+
+Functia rotire este apelata in urma inputului ROTATE si verifica daca s-a mai facut
+o selectie pana la momentul respectiv sau nu. In cazul in care a fost selectata o
+portiune de poza se apeleaza functia de rotire a unei selectii, iar in caz contrar
+este apelata functia de rotire a intregii poze.
+
+Functia salvare este apelata in urma inputului SAVE si salveaza o imagine in doua
+moduri: ascii sau binar.
+
+In functia main am alocat dinamic cele doua structuri, iar apoi este citita fiecare
+linie din fisier si apelate functiile in functie de input. La final sunt dealocate
+structurile si matricele in cazul in care a fost incarcata o imagine.
+
+
