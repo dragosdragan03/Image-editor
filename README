@@ -1,73 +1,123 @@
-# Copyright Dragan Dragos Ovidiu 313CAb 2022-2023
+# Image Editor
 
-La inceputul programului am construit cateva subprograme de care ma voi folosi
-de ele pe parcurs:
+## Overview
+Image Editor is a command-line application for processing and manipulating images. It supports various operations including loading, selecting regions, applying filters, rotating, cropping, and saving images in different formats.
 
-1. minim;
-2. maxim;
-3. dealocare;
-4. dealocare_select;
-5. alocare;
-6. clamp;
-7. inmultire.
+![Image Processing Examples](filters.png)
 
-Functia select_poza incarca in cadrul structurii select o matrice, dimensiunile
-acesteia, culoarea, precum si coordonatele.
+## Features
 
-Functia selectare este apelata in urma inputului SELECT care verifica daca este 
-SELECT ALL sau SELECT x1 y1 x2 y2 care la randul ei apeleaza functia select_poza
-si afiseaza un mesaj.
+### Basic Operations
+- **Loading images** from files
+- **Selecting** specific regions for editing
+- **Cropping** images to the selected region
+- **Saving** images in normal or ASCII format
 
-Functia load incarca in structura imagine o matrice alocata dinamic, campul
-destinat culorii, si al dimensiunilor. Citirea matricei se face in 2 moduri in
-functie de tipul pozei:binar sau ascii. In final este apelata si functia
-select_poza. Scopul este de a face o copie a imaginii si de a o folosi pentru
-a putea prelucra poza in functiile ce urmeaza.
+### Image Transformations
+- **Rotation** by specified angles
+- **Histogram** generation with customizable parameters
+- **Histogram equalization** for better contrast
 
-Functia histograma este apelata in urma inputului HISTOGRAM care creeaza o
-histograma cu x stelute si y bin-uri a pozei alb-negru incarcate.
+### Image Filters
+- **Edge detection** - highlights boundaries between objects
+- **Sharpen** - enhances details and edges
+- **Box blur** (normalized) - smooths the image using a uniform kernel
+- **Gaussian blur** - smooths the image with a 3×3 Gaussian kernel
 
-Functia egalizare este apelata in urma inputului EQUALIZE si executa
-egalizarea unei poze alb-negru. La finalul acesteia se copiaza in matricea
-auxiliara modificarea rezultata.
+## Commands
 
-Functia crop este apelata in urma inputului CROP si va retine in matricea din cadrul
-structurii imagine (poza finala), matricea din cadrul structurii select(cea
-auxiliara).
+### LOAD
+Loads an image from the specified file.
+```
+LOAD filename
+```
 
-Functia prelucrare este apelata pentru oricare dintre operatiile EDGE, BLUR,
-SHARPEN sau GAUSSIAN BLUR si care face inmultirea matricei de culori cu matricea
-kernel. Toate valorile rezultate sunt retinute in matricea auxiliara, iar la final
-sunt copiate toate in matricea "mama"(cea din cadrul structurii imagine).
+### SELECT
+Selects a region of the image for future operations. You can select the entire image or a specific rectangular region.
+```
+SELECT ALL
+SELECT x1 y1 x2 y2
+```
 
-Functia apply este apelata in urma inputului APPLY si verifica ce comanda trebuie
-sa se efectueze. In functie de comanda, matricea kernel este modificata.
+### HISTOGRAM
+Generates a histogram with the specified number of stars and bins.
+```
+HISTOGRAM x y
+```
+- `x`: number of stars
+- `y`: number of bins
 
-Functiile rotire90_select si rotire90_selectcolor rotesc o selectie de poza
-alb-negru, respectiv color la 90 de grade spre dreapta.
+### EQUALIZE
+Applies histogram equalization to enhance the contrast of the image.
+```
+EQUALIZE
+```
 
-Functia rotire_select verifica cate grade trebuie sa fie rotita o portiune selectata
-dintr o poza si apeleaza functia corespunzatoare tipului de poza(alb-negru sau 
-color). 
+### CROP
+Crops the image to the currently selected region.
+```
+CROP
+```
 
-Functia rotire90_pozanoncolor roteste o poza intreaga alb-negru la 90 de grade spre
-dreapta si functia rotire90_pozacolor roteste o poza intreaga color la 90 de grade
-spre stanga. Pentru acest lucru se dealoca matricea initiala si se aloca alta cu
-dimensiunile corecte in care se copiaza elementele din matricea auxiliara.
+### APPLY
+Applies the specified filter to the currently selected region.
+```
+APPLY EDGE
+APPLY SHARPEN
+APPLY BLUR
+APPLY GAUSSIAN_BLUR
+```
 
-Functia rotire_poza verifica cate grade trebuie sa fie rotita o poza si apeleaza
-functia corespunzatoare tipului de poza(alb-negru sau color). 
+### ROTATE
+Rotates the selected region by the specified angle (must be a multiple of 90 degrees).
+```
+ROTATE angle
+```
 
-Functia rotire este apelata in urma inputului ROTATE si verifica daca s-a mai facut
-o selectie pana la momentul respectiv sau nu. In cazul in care a fost selectata o
-portiune de poza se apeleaza functia de rotire a unei selectii, iar in caz contrar
-este apelata functia de rotire a intregii poze.
+### SAVE
+Saves the current image to a file, optionally in ASCII format.
+```
+SAVE filename
+SAVE filename ascii
+```
 
-Functia salvare este apelata in urma inputului SAVE si salveaza o imagine in doua
-moduri: ascii sau binar.
+### EXIT
+Exits the program and frees allocated memory.
+```
+EXIT
+```
 
-In functia main am alocat dinamic cele doua structuri, iar apoi este citita fiecare
-linie din fisier si apelate functiile in functie de input. La final sunt dealocate
-structurile si matricele in cazul in care a fost incarcata o imagine.
+## Implementation Details
 
+The application uses defensive programming to prevent crashes. It verifies that images are properly loaded before performing operations and provides appropriate error messages when necessary.
 
+Memory is dynamically allocated for image data and properly deallocated when the program exits to prevent memory leaks.
+
+Image processing algorithms are implemented using matrix operations, with different filters represented by convolution kernels:
+- Edge detection highlights boundaries between different objects or surfaces
+- Sharpening enhances fine details 
+- Box blur provides a basic smoothing effect
+- Gaussian blur creates a more natural-looking blur effect
+
+## Error Handling
+
+The program provides feedback for invalid commands and operations:
+- "No image loaded" when trying to operate without a loaded image
+- "Invalid command" for unrecognized commands
+- "Could not alloc the struct" for memory allocation failures
+
+## Example Usage
+
+```
+LOAD cat.ppm
+SELECT 100 100 400 300
+APPLY EDGE
+SAVE edge_cat.ppm
+SELECT ALL
+ROTATE 90
+APPLY GAUSSIAN_BLUR
+SAVE blurred_cat.ppm ascii
+EXIT
+```
+
+This sequence loads an image, selects a region, applies edge detection, saves it, selects the entire image, rotates it 90 degrees, applies a Gaussian blur, saves it in ASCII format, and exits.

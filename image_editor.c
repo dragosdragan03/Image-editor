@@ -1,4 +1,4 @@
-// Copyright Dragan Dragos Ovidiu 313CAb 2022-2023
+// Copyright Dragan Dragos Ovidiu 2022-2023
 
 #include <stdio.h>
 #include <stdlib.h>
